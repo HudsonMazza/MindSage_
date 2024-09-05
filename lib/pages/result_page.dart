@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:mind_sage/components/my_button.dart'; // Certifique-se de que o caminho está correto
-import 'package:mind_sage/pages/health_data.dart';
+import 'package:mind_sage/pages/pics_page.dart';
 import 'package:mind_sage/pages/profile_page.dart';
 
 class ResultsScreen extends StatelessWidget {
@@ -48,6 +47,36 @@ class ResultsScreen extends StatelessWidget {
               [14, 18, 25, 33],
             ),
             SizedBox(height: 32), // Espaço para o botão adicional
+
+            GestureDetector(
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => PicsPage(),
+                  ),
+                );
+              },
+              child: Container(
+                padding: const EdgeInsets.all(15),
+                margin: const EdgeInsets.symmetric(horizontal: 30),
+                decoration: BoxDecoration(
+                  color: Colors.blue[700],
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: const Center(
+                  child: Text(
+                    'Ver PICS recomendadas',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 19,
+                    ),
+                  ),
+                ),
+              ),
+            ),
+            SizedBox(height: 30,),
 
             GestureDetector(
               onTap: () {
