@@ -1,0 +1,22 @@
+# Ignorar arquivos e pastas criados pelo VS Code
+.vscode/
+*.code-workspace
+
+# Ignorar arquivos binários ou de build do Flutter
+build/
+*.log
+
+# Ignorar arquivos do sistema operacional
+.DS_Store
+Thumbs.db
+
+# Ignorar arquivos relacionados a pacotes
+pubspec.lock
+.idea/
+
+# Ignorar outros arquivos gerados
+*.iml
+*.apk
+*.ipk
+*.packages
+.packages
