@@ -1,8 +1,9 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:mind_sage/components/listTile.dart';
+import 'package:mind_sage/pages/dass_page.dart';
 import 'package:mind_sage/components/my_button.dart';
 import 'package:mind_sage/components/my_textfield.dart';
+import 'package:intl/intl.dart';
 import 'package:mind_sage/pages/profile_page.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -14,14 +15,13 @@ class HealthPage extends StatefulWidget {
 }
 
 class _HealthPageState extends State<HealthPage> {
-  bool diabetes = false;
-  bool hipertensao = false;
-  bool cancer = false;
-  bool outro = false;
 
   final user = FirebaseAuth.instance.currentUser!;
-  String? selectedCivilStatus;
-  String? selectedGender;
+  String? selectedEmotion;
+  String? selectedWorkout;
+  String? selectedIntestin;
+  String? completedDate;
+  String? completedTime;
 
   @override
   void initState() {
@@ -52,6 +52,17 @@ class _HealthPageState extends State<HealthPage> {
     await prefs.setBool('personalDataFormCompleted', true);
   }
 
+  // Método para atualizar data e hora de conclusão
+  void updateCompletionTime() {
+    setState(() {
+      final now = DateTime.now();
+      completedDate = DateFormat('EEEE, dd/MM/yyyy')
+          .format(now); // Formata o dia da semana, dia/mês/ano
+      completedTime =
+          DateFormat('HH:mm').format(now); // Formata a hora e os minutos
+    });
+  }
+
   // sign user out method
   void signUserOut() {
     FirebaseAuth.instance.signOut();
@@ -62,46 +73,39 @@ class _HealthPageState extends State<HealthPage> {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          'Dados Médicos...',
+          'Dados de Saúde',
           style: TextStyle(
             fontWeight: FontWeight.w600,
             fontSize: 30,
           ),
         ),
         backgroundColor: Colors.transparent,
-        actions: [
-          IconButton(
-            onPressed: signUserOut,
-            icon: const Icon(
-              Icons.cancel,
-              color: Colors.black87,
-              size: 40,
-            ),
-          ),
-        ],
       ),
-      body: SafeArea(
+      body:
+      SafeArea(
         child: SingleChildScrollView(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              SizedBox(height: 10,),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 25),
                 child: Text(
-                  "${user.displayName}, preencha os campos para continuar.",
+                  user.displayName != null
+                      ? " ${user.displayName!}, Em relação a essa semana:"
+                      : " ${user.email}, Em relação a essa semana:" ??
+                      "",
                   style: TextStyle(
-                    color: Colors.grey[600],
                     fontWeight: FontWeight.w500,
                     fontSize: 15,
                   ),
                 ),
               ),
-              const SizedBox(height: 7),
-              const SizedBox(height: 10),
+              const SizedBox(height: 8),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 27.0),
                 child: Text(
-                  "Prática de atividades físicas",
+                  "Você praticou atividades físicas essa semana?",
                   style: TextStyle(
                     color: Colors.grey[800],
                     fontWeight: FontWeight.w500,
@@ -113,7 +117,7 @@ class _HealthPageState extends State<HealthPage> {
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 25),
                 child: SizedBox(
-                  width: 300,
+                  width: 350,
                   child: DropdownButtonFormField<String>(
                     decoration: InputDecoration(
                       enabledBorder: OutlineInputBorder(
@@ -130,17 +134,17 @@ class _HealthPageState extends State<HealthPage> {
                           width: 2.5,
                         ),
                       ),
-                      fillColor: Color.fromARGB(29, 0, 162, 255),
+                      fillColor: Colors.white,
                       filled: true,
                       labelText: 'Selecione...',
                       floatingLabelBehavior: FloatingLabelBehavior.auto,
                     ),
-                    value: selectedCivilStatus,
+                    value: selectedWorkout,
                     items: <String>[
-                      'Sedentário',
-                      'Pratico as vezes',
-                      'Ativo fisicamente',
-                      'Atleta'
+                      'Não pratiquei',
+                      'Pratiquei de vez em quando',
+                      'Pratiquei frequentemente',
+                      'Pratiquei ativamente'
                     ].map((String value) {
                       return DropdownMenuItem<String>(
                         value: value,
@@ -149,17 +153,17 @@ class _HealthPageState extends State<HealthPage> {
                     }).toList(),
                     onChanged: (String? newValue) {
                       setState(() {
-                        selectedCivilStatus = newValue!;
+                        selectedWorkout = newValue!;
                       });
                     },
                   ),
                 ),
               ),
-              const SizedBox(height: 10),
+              const SizedBox(height: 55),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 27.0),
                 child: Text(
-                  "Funcionamento do intestino",
+                  "Qual emocão esteve predominante essa semana?",
                   style: TextStyle(
                     color: Colors.grey[800],
                     fontWeight: FontWeight.w500,
@@ -167,11 +171,13 @@ class _HealthPageState extends State<HealthPage> {
                   ),
                 ),
               ),
+
               SizedBox(height: 10),
+
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 25),
                 child: SizedBox(
-                  width: 300,
+                  width: 350,
                   child: DropdownButtonFormField<String>(
                     decoration: InputDecoration(
                       enabledBorder: OutlineInputBorder(
@@ -188,12 +194,72 @@ class _HealthPageState extends State<HealthPage> {
                           width: 2.5,
                         ),
                       ),
-                      fillColor: Color.fromARGB(29, 0, 162, 255),
+                      fillColor: Colors.white,
                       filled: true,
                       labelText: 'Selecione...',
                       floatingLabelBehavior: FloatingLabelBehavior.auto,
                     ),
-                    value: selectedGender,
+                    value: selectedEmotion,
+                    items: <String>[
+                      'Medo',
+                      'Tristeza',
+                      'Alegria',
+                      'Raiva',
+                    ].map((String value) {
+                      return DropdownMenuItem<String>(
+                        value: value,
+                        child: Text(value),
+                      );
+                    }).toList(),
+                    onChanged: (String? newValue) {
+                      setState(() {
+                        selectedEmotion = newValue!;
+                      });
+                    },
+                  ),
+                ),
+              ),
+              const SizedBox(height: 55),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 27.0),
+                child: Text(
+                  "Como seu intestino funcionou essa semana?",
+                  style: TextStyle(
+                    color: Colors.grey[800],
+                    fontWeight: FontWeight.w500,
+                    fontSize: 15,
+                  ),
+                ),
+              ),
+
+              SizedBox(height: 10),
+
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 25),
+                child: SizedBox(
+                  width: 350,
+                  child: DropdownButtonFormField<String>(
+                    decoration: InputDecoration(
+                      enabledBorder: OutlineInputBorder(
+                        borderSide: BorderSide(
+                          color: Colors.grey.shade400,
+                          width: 2,
+                        ),
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(8),
+                        borderSide: BorderSide(
+                          color: Colors.blue,
+                          width: 2.5,
+                        ),
+                      ),
+                      fillColor: Colors.white,
+                      filled: true,
+                      labelText: 'Selecione...',
+                      floatingLabelBehavior: FloatingLabelBehavior.auto,
+                    ),
+                    value: selectedIntestin,
                     items: <String>[
                       'Ruim',
                       'Mais ou menos',
@@ -207,88 +273,79 @@ class _HealthPageState extends State<HealthPage> {
                     }).toList(),
                     onChanged: (String? newValue) {
                       setState(() {
-                        selectedGender = newValue!;
+                        selectedIntestin = newValue!;
                       });
                     },
                   ),
                 ),
               ),
-              const SizedBox(height: 15),
-              Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      'Doenças pré-existentes',
-                      style:
-                          TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-                    ),
-                    SizedBox(height: 10),
-                    CheckboxListTile(
-                      title: Text(
-                        'Diabetes',
-                      ),
-                      value: diabetes,
-                      activeColor: Colors.blue,
-                      onChanged: (bool? value) {
-                        setState(() {
-                          diabetes = value!;
-                        });
-                      },
-                    ),
-                    CheckboxListTile(
-                      title: Text(
-                        'Hipertensão',
-                      ),
-                      value: hipertensao,
-                      activeColor: Colors.blue,
-                      onChanged: (bool? value) {
-                        setState(() {
-                          hipertensao = value!;
-                        });
-                      },
-                    ),
-                    CheckboxListTile(
-                      title: Text(
-                        'Câncer',
-                      ),
-                      value: cancer,
-                      activeColor: Colors.blue,
-                      onChanged: (bool? value) {
-                        setState(() {
-                          cancer = value!;
-                        });
-                      },
-                    ),
-                    CheckboxListTile(
-                      title: Text(
-                        'Outro',
-                      ),
-                      value: outro,
-                      activeColor: Colors.blue,
-                      onChanged: (bool? value) {
-                        setState(() {
-                          outro = value!;
-                        });
-                      },
-                    ),
-                  ],
-                ),
-              ),
-              const SizedBox(height: 15),
+              const SizedBox(height: 70),
+              const SizedBox(height: 70),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 30),
                 child: GestureDetector(
-                  onTap: () async {
-                    await _markPersonalDataFormCompleted();
-                    Navigator.pushAndRemoveUntil(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => UserProfile(),
-                      ),
-                      (Route<dynamic> route) => false,
-                    );
+                  onTap: () {
+                    if (selectedIntestin != null && selectedWorkout != null && selectedEmotion != null) {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => QuestionScreen(
+                            onQuestionnaireCompleted: updateCompletionTime,
+                          ),
+                        ),
+                      );
+                    } else {
+                      showDialog(
+                        context: context,
+                        builder: (BuildContext context) {
+                          return AlertDialog(
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(20), // Bordas arredondadas
+                            ),
+                            backgroundColor: Colors.white, // Fundo azul claro
+                            title: Row(
+                              children: [
+                                Icon(
+                                  Icons.info_outline, // Ícone de informação
+                                  color: Colors.blue[400],
+                                ),
+                                SizedBox(width: 10), // Espaçamento entre ícone e texto
+                                Text(
+                                  'Atenção',
+                                  style: TextStyle(
+                                    color: Colors.blue[700], // Cor do texto principal
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ],
+                            ),
+                            content: Text(
+                              'Você precisa selecionar todas as opções para continuar.',
+                              style: TextStyle(
+                                color: Colors.blueGrey[800], // Cor do texto da mensagem
+                              ),
+                            ),
+                            actions: [
+                              TextButton(
+                                style: TextButton.styleFrom(
+                                  foregroundColor: Colors.white, // Cor do texto do botão
+                                  backgroundColor: Colors.blue[700], // Cor de fundo do botão
+                                  padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10), // Padding do botão
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(10), // Bordas arredondadas do botão
+                                  ),
+                                ),
+                                child: Text('OK'),
+                                onPressed: () {
+                                  Navigator.of(context).pop(); // Fecha o diálogo
+                                },
+                              ),
+                            ],
+                          );
+                        },
+                      );
+
+                    }
                   },
                   child: Container(
                     padding: const EdgeInsets.all(15),
@@ -309,11 +366,13 @@ class _HealthPageState extends State<HealthPage> {
                   ),
                 ),
               ),
+
               const SizedBox(height: 15),
             ],
           ),
         ),
       ),
+      backgroundColor: Colors.grey[100],
     );
   }
 }

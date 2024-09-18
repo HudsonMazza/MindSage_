@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:mind_sage/components/about_page.dart';
 import 'package:mind_sage/pages/home_page.dart';
 import 'package:mind_sage/pages/login_or_register_page.dart';
 import 'package:google_sign_in/google_sign_in.dart';
@@ -45,7 +46,7 @@ class AuthPage extends StatelessWidget {
             return Center(child: Text('Algo deu errado!'));
           } else if (snapshot.hasData) {
             // Usuário autenticado
-            return HomePage();
+            return MindSageScreen();
           } else {
             // Usuário não autenticado
             return LoginOrRegisterPage();

@@ -5,6 +5,7 @@ import 'package:mind_sage/components/my_textfield.dart';
 import 'package:mind_sage/pages/health_data.dart';
 import 'package:mind_sage/pages/profile_page.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:mind_sage/components/about_page.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -55,6 +56,7 @@ class _HomePageState extends State<HomePage> {
     FirebaseAuth.instance.signOut();
   }
 
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -68,16 +70,6 @@ class _HomePageState extends State<HomePage> {
           ),
         ),
         backgroundColor: Colors.transparent,
-        actions: [
-          IconButton(
-            onPressed: signUserOut,
-            icon: const Icon(
-              Icons.cancel,
-              color: Colors.black87,
-              size: 40,
-            ),
-          ),
-        ],
       ),
       body: SafeArea(
         child: SingleChildScrollView(
@@ -87,7 +79,10 @@ class _HomePageState extends State<HomePage> {
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 25),
                 child: Text(
-                  "${user.displayName}, preencha os campos para continuar.",
+                  user.displayName != null
+                      ? "${user.displayName!}, preencha os dados para prosseguir"
+                      : "${user.email}, preencha os dados para prosseguir" ??
+                      "",
                   style: TextStyle(
                     color: Colors.grey[600],
                     fontWeight: FontWeight.w500,
@@ -114,12 +109,6 @@ class _HomePageState extends State<HomePage> {
                 obscureText: false,
               ),
               const SizedBox(height: 15),
-              MyTextField(
-                controller: _nascDateController,
-                labelText: 'Data de nascimento*',
-                obscureText: false,
-              ),
-              const SizedBox(height: 10),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 25.0),
                 child: Text(
@@ -154,7 +143,7 @@ class _HomePageState extends State<HomePage> {
                               width: 2.5,
                             ),
                           ),
-                          fillColor: Color.fromARGB(29, 0, 162, 255),
+                          fillColor: Colors.white,
                           filled: true,
                           labelText: 'Estado Civil',
                           floatingLabelBehavior: FloatingLabelBehavior.auto,
@@ -196,7 +185,7 @@ class _HomePageState extends State<HomePage> {
                               width: 2.5,
                             ),
                           ),
-                          fillColor: Color.fromARGB(29, 0, 162, 255),
+                          fillColor: Colors.white,
                           filled: true,
                           labelText: 'Sexo',
                           floatingLabelBehavior: FloatingLabelBehavior.auto,
@@ -225,15 +214,68 @@ class _HomePageState extends State<HomePage> {
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 30),
                 child: GestureDetector(
-                  onTap: () async {
+                  onTap: () async { if (selectedGender != null && selectedCivilStatus != null &&
+                      _ageController != null && _nameController !=null &&  _phoneController != null) {
                     await _markPersonalDataFormCompleted();
                     Navigator.pushAndRemoveUntil(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => HealthPage(),
+                        builder: (context) => UserProfile(),
                       ),
-                      (Route<dynamic> route) => false,
+                          (Route<dynamic> route) => false,
                     );
+                  } else {
+                    showDialog(
+                      context: context,
+                      builder: (BuildContext context) {
+                        return AlertDialog(
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(20), // Bordas arredondadas
+                          ),
+                          backgroundColor: Colors.white, // Fundo azul claro
+                          title: Row(
+                            children: [
+                              Icon(
+                                Icons.info_outline, // Ícone de informação
+                                color: Colors.blue[400],
+                              ),
+                              SizedBox(width: 10), // Espaçamento entre ícone e texto
+                              Text(
+                                'Atenção',
+                                style: TextStyle(
+                                  color: Colors.blue[700], // Cor do texto principal
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ],
+                          ),
+                          content: Text(
+                            'Você precisa responder todas as opções para continuar.',
+                            style: TextStyle(
+                              color: Colors.blueGrey[800], // Cor do texto da mensagem
+                            ),
+                          ),
+                          actions: [
+                            TextButton(
+                              style: TextButton.styleFrom(
+                                foregroundColor: Colors.white, // Cor do texto do botão
+                                backgroundColor: Colors.blue[700], // Cor de fundo do botão
+                                padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10), // Padding do botão
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(10), // Bordas arredondadas do botão
+                                ),
+                              ),
+                              child: Text('OK'),
+                              onPressed: () {
+                                Navigator.of(context).pop(); // Fecha o diálogo
+                              },
+                            ),
+                          ],
+                        );
+                      },
+                    );
+                  }
+
                   },
                   child: Container(
                     padding: const EdgeInsets.all(15),

@@ -29,7 +29,7 @@ class MyTextField extends StatelessWidget {
             focusedBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(8),
                 borderSide: BorderSide(color: Colors.blue, width: 2.5)),
-            fillColor: Color.fromARGB(29, 0, 162, 255),
+            fillColor: Colors.white,
             filled: true,
             labelText: labelText,
             floatingLabelBehavior: FloatingLabelBehavior.auto,

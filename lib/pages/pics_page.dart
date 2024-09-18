@@ -26,7 +26,7 @@ class PicsPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('PICS'),
+        title: const Text('PICS', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 30),),
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
           onPressed: () {
@@ -45,8 +45,8 @@ class PicsPage extends StatelessWidget {
                 // Imagem principal
                 ClipRRect(
                   borderRadius: BorderRadius.circular(16),
-                  child: Image.network(
-                    'https://1.bp.blogspot.com/-sS_dqhWWVYI/XuIKGd3cYyI/AAAAAAAAa6I/6wAv97x7YHoXtczDXiDbL_ILHtcbovQhwCK4BGAsYHg/s736/d84bd239b615427b949a1ff06c3d1cee.jpg', // Substitua pela sua URL ou use Image.asset
+                  child: Image.asset(
+                    'lib/Images/meditacao.jpg',
                     height: 300,
                     width: 400,
                     fit: BoxFit.cover,
@@ -56,7 +56,7 @@ class PicsPage extends StatelessWidget {
                 
                 // Texto de descrição
                 const Text(
-                  'Baseado no seu resultado atual recomendamos as seguintes práticas integrativas complementares:',
+                  'Para um melhor gerenciamento de suas emoções utilize as práticas integrativas e complementares.',
                   textAlign: TextAlign.center,
                   style: TextStyle(fontSize: 16),
                 ),
@@ -80,8 +80,7 @@ class PicsPage extends StatelessWidget {
                     shrinkWrap: true,  // Para evitar o erro de altura indefinida
                     children: const [
                     
-                      PracticeButton(title: 'Acupressão',),
-                      PracticeButton(title: 'Respiração consciente'),
+                      PracticeButton(title: 'Reflexologia Podal',),
                       PracticeButton(title: 'Meditação'),
                       PracticeButton(title: 'Cromoterapia'),
                     ],

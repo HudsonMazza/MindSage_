@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:mind_sage/pages/dass_page.dart';
+import 'package:mind_sage/pages/health_data.dart';
 import 'package:mind_sage/pages/joyna_page.dart';
 
 class UserProfile extends StatefulWidget {
@@ -90,112 +91,132 @@ class _UserProfileState extends State<UserProfile> {
               ),
             ),
             Divider(),
+
+            ClipRRect(
+              borderRadius: BorderRadius.circular(12), // Aplicar BorderRadius ao Container
+              child: Container(
+                width: 170,
+                color: Colors.white,
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Image.asset(
+                    'lib/Images/logo.png',
+                    height: 100,
+                  ),
+                ),
+              ),
+            ),
+            SizedBox(
+              height: 10,
+            ),
             GestureDetector(
               onTap: () {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => QuestionScreen(
-                      onQuestionnaireCompleted: updateCompletionTime,
-                    ),
+                    builder: (context) => HealthPage(),
                   ),
                 );
               },
               child: Center(
                 child: Card(
-                  elevation: 7,
+                  elevation: 9,
                   shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(25),
+                    borderRadius: BorderRadius.circular(10), // Definido para o Card
                   ),
-                  child: Container(
-                    color: Colors.white,
-                    width: 350,
-                    padding: const EdgeInsets.all(16),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          'Como foi sua semana?',
-                          style: TextStyle(
-                            fontSize: 24,
-                            fontWeight: FontWeight.bold,
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(10), // Aplicar BorderRadius ao Container
+                    child: Container(
+                      color: Colors.white,
+                      width: 350,
+                      padding: const EdgeInsets.all(16),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            'Vamos começar a sua autoavaliação!',
+                            style: TextStyle(
+                              fontSize: 24,
+                              fontWeight: FontWeight.bold,
+                            ),
+                            textAlign: TextAlign.center,
                           ),
-                        ),
-                        SizedBox(height: 8),
-                        Text(
-                          'Sumário',
-                          style: TextStyle(
-                            fontSize: 14,
-                            color: Colors.grey[700],
+                          SizedBox(height: 8),
+                          Text(
+                            'Sumário',
+                            style: TextStyle(
+                              fontSize: 14,
+                              color: Colors.grey[700],
+                            ),
                           ),
-                        ),
-                        Divider(
-                          color: Colors.blue,
-                          thickness: 2,
-                          endIndent: 200,
-                        ),
-                        SizedBox(height: 8),
-                        Row(
-                          children: [
-                            Expanded(
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
+                          Divider(
+                            color: Colors.blue,
+                            thickness: 2,
+                            endIndent: 200,
+                          ),
+                          SizedBox(height: 8),
+                          Row(
+                            children: [
+                              Expanded(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      'Iniciar Teste 1/4',
+                                      style: TextStyle(
+                                        fontSize: 14,
+                                        fontWeight: FontWeight.w600,
+                                      ),
+                                    ),
+                                    SizedBox(height: 4),
+                                    Text(
+                                      'Como foi sua semana?',
+                                      style: TextStyle(
+                                        fontSize: 14,
+                                        color: Colors.grey[800],
+                                      ),
+                                    ),
+                                    SizedBox(height: 4),
+                                    Text(
+                                      completedDate != null
+                                          ? 'Dia: $completedDate, $completedTime'
+                                          : 'Questionário não concluído ainda',
+                                      style: TextStyle(
+                                        fontSize: 14,
+                                        color: Colors.grey[800],
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              Column(
                                 children: [
+                                  CircleAvatar(
+                                    radius: 12,
+                                    backgroundColor: Colors.blue[100],
+                                    child: Text(
+                                      '1',
+                                      style: TextStyle(
+                                        color: Colors.blue,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                  ),
+                                  SizedBox(height: 4),
                                   Text(
-                                    'Teste 1/4',
+                                    'Update',
                                     style: TextStyle(
+                                      color: Colors.blue,
                                       fontSize: 14,
                                       fontWeight: FontWeight.w600,
                                     ),
                                   ),
-                                  SizedBox(height: 4),
-                                  Text(
-                                    'Questionário DASS-21.',
-                                    style: TextStyle(
-                                      fontSize: 14,
-                                      color: Colors.grey[800],
-                                    ),
-                                  ),
-                                  SizedBox(height: 4),
-                                  Text(
-                                    completedDate != null
-                                        ? 'Dia: $completedDate, $completedTime'
-                                        : 'Questionário não concluído ainda',
-                                    style: TextStyle(
-                                      fontSize: 14,
-                                      color: Colors.grey[800],
-                                    ),
-                                  ),
                                 ],
                               ),
-                            ),
-                            Column(
-                              children: [
-                                CircleAvatar(
-                                  radius: 12,
-                                  backgroundColor: Colors.blue[100],
-                                  child: Text(
-                                    '1',
-                                    style: TextStyle(
-                                      color: Colors.blue,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
-                                ),
-                                SizedBox(height: 4),
-                                Text(
-                                  'Update',
-                                  style: TextStyle(
-                                    color: Colors.blue,
-                                    fontSize: 14,
-                                    fontWeight: FontWeight.w600,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ],
-                        ),
-                      ],
+                            ],
+                          ),
+                        ],
+                      ),
                     ),
                   ),
                 ),

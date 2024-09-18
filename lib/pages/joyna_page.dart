@@ -74,7 +74,7 @@ class JoynaPage extends StatelessWidget {
                             'https://web.whatsapp.com/send?autoload=1&app_absent=0&phone=559192650506&text');
                       },
                     ),
-                    Text('@dra.joynacastro',
+                    Text('+55 91 9265-0506',
                     style: TextStyle(
                       color: Colors.black,
                       fontWeight: FontWeight.w500
@@ -98,7 +98,7 @@ class JoynaPage extends StatelessWidget {
                             'https://www.instagram.com/dra.joynacastro/');
                       },
                     ),
-                    Text('+55 91 9265-0506',
+                    Text('@dra.joynacastro',
                     style: TextStyle(
                       color: Colors.black,
                       fontWeight: FontWeight.w500
