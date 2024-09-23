@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:mind_sage/pages/levels_page.dart';
 import 'package:mind_sage/pages/pics_page.dart';
 import 'package:mind_sage/pages/profile_page.dart';
 
@@ -163,17 +164,17 @@ class ResultsScreen extends StatelessWidget {
     );
   }
 
-  String _getLevel(int score, List<int> thresholds) {
+   _getLevel(int score, List<int> thresholds) {
     if (score <= thresholds[0]) {
-      return 'Normal';
+      return LevelsPage(depressionScore: depressionScore, anxietyScore: anxietyScore, stressScore: stressScore);
     } else if (score <= thresholds[1]) {
-      return 'Leve';
+      return LevelsPage(depressionScore: depressionScore, anxietyScore: anxietyScore, stressScore: stressScore);
     } else if (score <= thresholds[2]) {
-      return 'Moderado';
+      return LevelsPage(depressionScore: depressionScore, anxietyScore: anxietyScore, stressScore: stressScore);
     } else if (score <= thresholds[3]) {
-      return 'Severo';
+      return LevelsPage(depressionScore: depressionScore, anxietyScore: anxietyScore, stressScore: stressScore);
     } else {
-      return 'Muito severo';
+      return 'LevelsPage';
     }
   }
 }
