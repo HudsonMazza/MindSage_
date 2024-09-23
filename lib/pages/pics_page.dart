@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:mind_sage/pages/feedback_page.dart';
+import 'package:mind_sage/pages/profile_page.dart';
 
 void main() {
   runApp(const MyApp());
@@ -84,6 +86,38 @@ class PicsPage extends StatelessWidget {
                       PracticeButton(title: 'Meditação'),
                       PracticeButton(title: 'Cromoterapia'),
                     ],
+                  ),
+                ),
+                SizedBox(height: 30,),
+                GestureDetector(
+                  onTap: () {
+// Exemplo na sua LevelsPage (ou onde estiver o botão que leva ao UserProfile)
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) =>
+                            FeedbackPage(onQuestionnaireCompleted: () {}),
+
+                      ),
+                    );
+                  },
+                  child: Container(
+                    padding: const EdgeInsets.all(15),
+                    margin: const EdgeInsets.symmetric(horizontal: 70),
+                    decoration: BoxDecoration(
+                      color: Colors.blue[500],
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    child: const Center(
+                      child: Text(
+                        'Continuar',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 19,
+                        ),
+                      ),
+                    ),
                   ),
                 ),
               ],

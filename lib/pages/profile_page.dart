@@ -232,7 +232,7 @@ class _UserProfileState extends State<UserProfile> {
                                     ),
                                     SizedBox(height: 4),
                                     Text(
-                                      userQuestOk(),
+                                      'Aperte aqui para fazer o questionário.',
                                       style: TextStyle(
                                         fontSize: 14,
                                         color: Colors.grey[800],

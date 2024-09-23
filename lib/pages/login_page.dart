@@ -21,7 +21,6 @@ class _LoginPageState extends State<LoginPage> {
 
   final passwordController = TextEditingController();
 
-  // show loading circle
   void signUserIn() async {
     // show loading circle
     showDialog(
@@ -38,57 +37,129 @@ class _LoginPageState extends State<LoginPage> {
         email: emailController.text,
         password: passwordController.text,
       );
-    } on FirebaseAuthException catch (e) {
-      //pop the loading circle
+
+      // Se o login for bem-sucedido, feche o loading circle
       Navigator.pop(context);
+    } on FirebaseAuthException catch (e) {
+      //pop the loading circle apenas se houver erro
+      Navigator.pop(context);
+
       // EMAIL ERRADO
-      if (e.code == 'user-not-found') {
+      if (e.code != null) {
         wrongEmailMessage();
       }
-
-      // SERNHA ERRADA
-      else if (e.code == 'wrong-password') {
+      // SENHA ERRADA
+      else if (e.code != null) {
         wrongPasswordMessage();
       }
     }
-
-    //pop the loading circle
-    Navigator.pop(context);
   }
 
-  // WRONG EMAIL MESSAGE POPUP
   void wrongEmailMessage() {
     showDialog(
-        context: context,
-        builder: (context) {
-          return const AlertDialog(
-            backgroundColor: Color.fromARGB(255, 8, 31, 97),
-            title: Text(
-              "Esse E-mail não existe...",
-              style: TextStyle(
-                color: Colors.white,
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(20), // Bordas arredondadas
+          ),
+          backgroundColor: Colors.white, // Fundo azul claro
+          title: Row(
+            children: [
+              Icon(
+                Icons.info_outline, // Ícone de informação
+                color: Colors.blue[400],
               ),
+              SizedBox(width: 10), // Espaçamento entre ícone e texto
+              Text(
+                'Atenção',
+                style: TextStyle(
+                  color: Colors.blue[700], // Cor do texto principal
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ],
+          ),
+          content: Text(
+            'A senha ou o e-mail estão errados, tente novamente!',
+            style: TextStyle(
+              color: Colors.blueGrey[800], // Cor do texto da mensagem
+              fontSize: 18,
             ),
-          );
-        });
+          ),
+          actions: [
+            TextButton(
+              style: TextButton.styleFrom(
+                foregroundColor: Colors.white, // Cor do texto do botão
+                backgroundColor: Colors.blue[700], // Cor de fundo do botão
+                padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10), // Padding do botão
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10), // Bordas arredondadas do botão
+                ),
+              ),
+              child: Text('Fechar'),
+              onPressed: () {
+                Navigator.of(context).pop(); // Fecha o diálogo
+              },
+            ),
+          ],
+        );
+      },
+    );
   }
 
-  // WRONG PASSWORD MESSAGE POPUP
   void wrongPasswordMessage() {
     showDialog(
-        context: context,
-        builder: (context) {
-          return const AlertDialog(
-            backgroundColor: Color.fromARGB(255, 8, 31, 97),
-            title: Text(
-              "Sua senha está errada...",
-              style: TextStyle(
-                color: Colors.white,
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(20), // Bordas arredondadas
+          ),
+          backgroundColor: Colors.white, // Fundo azul claro
+          title: Row(
+            children: [
+              Icon(
+                Icons.info_outline, // Ícone de informação
+                color: Colors.blue[400],
               ),
+              SizedBox(width: 10), // Espaçamento entre ícone e texto
+              Text(
+                'Atenção',
+                style: TextStyle(
+                  color: Colors.blue[700], // Cor do texto principal
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ],
+          ),
+          content: Text(
+            'A senha ou o e-mail estão errados.',
+            style: TextStyle(
+              color: Colors.blueGrey[800], // Cor do texto da mensagem
             ),
-          );
-        });
+          ),
+          actions: [
+            TextButton(
+              style: TextButton.styleFrom(
+                foregroundColor: Colors.white, // Cor do texto do botão
+                backgroundColor: Colors.blue[700], // Cor de fundo do botão
+                padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10), // Padding do botão
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10), // Bordas arredondadas do botão
+                ),
+              ),
+              child: Text('Fechar'),
+              onPressed: () {
+                Navigator.of(context).pop(); // Fecha o diálogo
+              },
+            ),
+          ],
+        );
+      },
+    );
   }
+
 
   @override
   Widget build(BuildContext context) {

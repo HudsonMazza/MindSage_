@@ -1,1 +1,0 @@
- C:\\Users\\hudsonmazza\\Desktop\\MindSage_\\.dart_tool\\flutter_build\\a3604b12cd94bb46d76ab1544b604d51\\native_assets.yaml: 

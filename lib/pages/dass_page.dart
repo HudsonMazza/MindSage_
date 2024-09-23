@@ -1,8 +1,9 @@
 // ignore_for_file: prefer_const_constructors
-
 import 'package:flutter/material.dart';
-import 'package:mind_sage/pages/result_page.dart';
+import 'package:mind_sage/pages/feedback_page.dart';
 import 'package:mind_sage/pages/levels_page.dart';
+import 'package:mind_sage/pages/pics_page.dart';
+import 'package:shared_preferences/shared_preferences.dart'; // Importa para armazenamento local
 
 class QuestionScreen extends StatefulWidget {
   final VoidCallback onQuestionnaireCompleted;
@@ -19,6 +20,77 @@ class _QuestionScreenState extends State<QuestionScreen> {
   int _depressionScore = 0;
   int _anxietyScore = 0;
   int _stressScore = 0;
+
+  DateTime? _lastQuestionnaireDate; // Variável para armazenar a data do último questionário
+
+  @override
+  void initState() {
+    super.initState();
+    _loadLastQuestionnaireDateAndShowDialog(); // Verifica e exibe o diálogo se necessário
+  }
+
+  Future<void> _loadLastQuestionnaireDateAndShowDialog() async {
+    await _loadLastQuestionnaireDate(); // Carrega a data anterior
+    if (_lastQuestionnaireDate != null) {
+      final now = DateTime.now();
+      final difference = now.difference(_lastQuestionnaireDate!);
+
+      if (difference.inDays < 7) {
+        // Se não se passaram 7 dias, mostra o alerta
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          showDialog(
+            context: context,
+            builder: (BuildContext context) {
+              return AlertDialog(
+
+                title: Text('Você já fez uma avaliação recentemente!',
+                  style: TextStyle(
+                    color: Colors.blue[700], // Cor do texto principal
+                    fontWeight: FontWeight.bold,
+                  ),),
+                content: Text('Você deve esperar ${7 - difference.inDays} dias para refazer o questionário para garantir precisão dos resultados e acompanhar suas mudanças ao longo do tempo, recomendamos que você espere pelo menos uma semana antes de realizar uma nova avaliação. Isso nos ajuda a entender melhor seu progresso e ajustar nossas sugestões de práticas integrativas para você. Seu bem-estar é a nossa prioridade!💚 '),
+                actions: [
+                  TextButton(
+                    style: TextButton.styleFrom(
+                      foregroundColor: Colors.white, // Cor do texto do botão
+                      backgroundColor: Colors.blue[700], // Cor de fundo do botão
+                      padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10), // Padding do botão
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10), // Bordas arredondadas do botão
+                      ),
+                    ),
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                      Navigator.of(context).pop(); // Sai da tela de questionário
+
+                    },
+                    child: Text('Entendi', style: TextStyle(
+              color: Colors.white, // Cor do texto principal
+              fontWeight: FontWeight.bold,
+              ),
+                    ),
+                  ),
+                ],
+              );
+            },
+          );
+        });
+      }
+    }
+  }
+
+  Future<void> _loadLastQuestionnaireDate() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String? dateString = prefs.getString('lastQuestionnaireDate');
+    if (dateString != null) {
+      _lastQuestionnaireDate = DateTime.parse(dateString);
+    }
+  }
+
+  Future<void> _saveLastQuestionnaireDate() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setString('lastQuestionnaireDate', DateTime.now().toIso8601String());
+  }
 
   final List<Map<String, dynamic>> _questions = [
     {
@@ -50,7 +122,7 @@ class _QuestionScreenState extends State<QuestionScreen> {
     },
     {
       'question':
-          'Senti dificuldade para respirar (por exemplo, respiração rápida excessiva, falta de ar na ausência de esforço físico)',
+      'Senti dificuldade para respirar (por exemplo, respiração rápida excessiva, falta de ar na ausência de esforço físico)',
       'options': [
         'Não se aplicou de maneira alguma',
         'Aplicou-se em algum grau ou por pouco tempo',
@@ -96,7 +168,7 @@ class _QuestionScreenState extends State<QuestionScreen> {
     },
     {
       'question':
-          'Preocupei-me com situações em que poderia entrar em pânico e me sentir ridículo',
+      'Preocupei-me com situações em que poderia entrar em pânico e me sentir ridículo',
       'options': [
         'Não se aplicou de maneira alguma',
         'Aplicou-se em algum grau ou por pouco tempo',
@@ -142,7 +214,7 @@ class _QuestionScreenState extends State<QuestionScreen> {
     },
     {
       'question':
-          'Senti-me intolerante a qualquer coisa que me impedisse de continuar o que estava fazendo',
+      'Senti-me intolerante a qualquer coisa que me impedisse de continuar o que estava fazendo',
       'options': [
         'Não se aplicou de maneira alguma',
         'Aplicou-se em algum grau ou por pouco tempo',
@@ -188,7 +260,7 @@ class _QuestionScreenState extends State<QuestionScreen> {
     },
     {
       'question':
-          'Estive ciente de ações do meu coração na ausência de esforço físico (por exemplo, sensação de aumento da frequência cardíaca, falta de batimentos cardíacos)',
+      'Estive ciente de ações do meu coração na ausência de esforço físico (por exemplo, sensação de aumento da frequência cardíaca, falta de batimentos cardíacos)',
       'options': [
         'Não se aplicou de maneira alguma',
         'Aplicou-se em algum grau ou por pouco tempo',
@@ -225,15 +297,12 @@ class _QuestionScreenState extends State<QuestionScreen> {
     print('Ansiedade: $anxietyLevel');
     print('Estresse: $stressLevel');
 
-    // Navega para a tela de resultados
+    _saveLastQuestionnaireDate(); // Salva a data do questionário atual
+
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) => LevelsPage(
-          depressionScore: _depressionScore,
-          anxietyScore: _anxietyScore,
-          stressScore: _stressScore,
-        ),
+        builder: (context) => LevelsPage(depressionScore: _depressionScore, anxietyScore: _anxietyScore, stressScore: _stressScore),
       ),
     );
   }
@@ -272,14 +341,12 @@ class _QuestionScreenState extends State<QuestionScreen> {
         widget.onQuestionnaireCompleted();
       }
     } else {
-      // Mostra um alerta se nenhuma opção foi selecionada
       showDialog(
         context: context,
         builder: (BuildContext context) {
           return AlertDialog(
             title: Text('Selecione uma opção'),
-            content:
-                Text('Você precisa selecionar uma opção antes de continuar.'),
+            content: Text('Você precisa selecionar uma opção antes de continuar.'),
             actions: [
               TextButton(
                 onPressed: () {

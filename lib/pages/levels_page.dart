@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mind_sage/pages/pics_page.dart';
 import 'package:mind_sage/pages/profile_page.dart';
 
 class LevelsPage extends StatelessWidget {
@@ -247,8 +248,7 @@ class LevelsPage extends StatelessWidget {
                       context,
                       MaterialPageRoute(
                         builder: (context) =>
-                            UserProfile(depressionScore: depressionScore,  anxietyScore: anxietyScore,  stressScore: stressScore, ),
-
+                            PicsPage(),
 
                       ),
                     );

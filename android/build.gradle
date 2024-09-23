@@ -3,6 +3,10 @@ buildscript {
         google()
         mavenCentral()
     }
+
+    dependencies {
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:1.9.0" // Replace with latest compatible version
+    }
 }
 
 allprojects {
@@ -15,10 +19,9 @@ allprojects {
 rootProject.buildDir = "../build"
 subprojects {
     project.buildDir = "${rootProject.buildDir}/${project.name}"
+
 }
-subprojects {
-    project.evaluationDependsOn(":app")
-}
+
 
 tasks.register("clean", Delete) {
     delete rootProject.buildDir
